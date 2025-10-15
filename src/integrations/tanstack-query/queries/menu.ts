@@ -6,11 +6,12 @@ export const menuQueries = {
 	getMenu: (handle: string) =>
 		queryOptions({
 			queryKey: [...menuQueries.all(), "menu"],
-			queryFn: async () =>
-				getMenu({
+			queryFn: async () => {
+				return getMenu({
 					data: {
 						handle,
 					},
-				}),
+				});
+			},
 		}),
 };

@@ -1,4 +1,4 @@
-import { getCollectionProducts } from "@/integrations/shopify";
+import { getCollectionProducts, getCollections } from "@/integrations/shopify";
 import { queryOptions } from "@tanstack/react-query";
 
 export const collectionsQueries = {
@@ -12,5 +12,10 @@ export const collectionsQueries = {
 						collection,
 					},
 				}),
+		}),
+	getCollections: () =>
+		queryOptions({
+			queryKey: [...collectionsQueries.all(), "collections"],
+			queryFn: async () => getCollections(),
 		}),
 };

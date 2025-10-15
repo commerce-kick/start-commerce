@@ -24,33 +24,31 @@ function App() {
 	);
 
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-			<section className="grid lg:grid-cols-4 mx-auto container py-24">
-				{data.map((slot) => {
-					return (
-						<Card key={slot.id} className="pt-0 overflow-hidden">
-							<img
-								src={slot.featuredImage.url}
-								className="w-full"
-								alt={slot.featuredImage.altText}
-							/>
-							<CardHeader>{slot.title}</CardHeader>
-							<CardContent>
-								<Button asChild>
-									<Link
-										to="/product/$productId"
-										params={{
-											productId: slot.handle,
-										}}
-									>
-										view product
-									</Link>
-								</Button>
-							</CardContent>
-						</Card>
-					);
-				})}
-			</section>
-		</div>
+		<section className="grid lg:grid-cols-4 mx-auto container py-24">
+			{data.map((slot) => {
+				return (
+					<Card key={slot.id} className="pt-0 overflow-hidden">
+						<img
+							src={slot.featuredImage.url}
+							className="w-full"
+							alt={slot.featuredImage.altText}
+						/>
+						<CardHeader>{slot.title}</CardHeader>
+						<CardContent>
+							<Button asChild>
+								<Link
+									to="/product/$productId"
+									params={{
+										productId: slot.handle,
+									}}
+								>
+									view product
+								</Link>
+							</Button>
+						</CardContent>
+					</Card>
+				);
+			})}
+		</section>
 	);
 }

@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import NavBar from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { createCart } from "@/integrations/shopify";
 import { collectionsQueries } from "@/integrations/tanstack-query/queries/collections";
@@ -11,6 +11,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Suspense } from "react";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -70,8 +71,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<Header />
-				{children}
+				<main className="w-full">
+					<Suspense fallback={"loading..."}>
+						<NavBar />
+					</Suspense>
+					{children}
+				</main>
+
 				<Toaster />
 				<TanStackDevtools
 					config={{

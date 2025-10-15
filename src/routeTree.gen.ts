@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatIndexRouteImport } from './routes/$/index'
+import { Route as SearchCollectionRouteImport } from './routes/search/$collection'
 import { Route as ProductProductIdRouteImport } from './routes/product/$productId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const SplatIndexRoute = SplatIndexRouteImport.update({
   path: '/$/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchCollectionRoute = SearchCollectionRouteImport.update({
+  id: '/search/$collection',
+  path: '/search/$collection',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductProductIdRoute = ProductProductIdRouteImport.update({
   id: '/product/$productId',
   path: '/product/$productId',
@@ -32,30 +38,34 @@ const ProductProductIdRoute = ProductProductIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/product/$productId': typeof ProductProductIdRoute
+  '/search/$collection': typeof SearchCollectionRoute
   '/$': typeof SplatIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/product/$productId': typeof ProductProductIdRoute
+  '/search/$collection': typeof SearchCollectionRoute
   '/$': typeof SplatIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/product/$productId': typeof ProductProductIdRoute
+  '/search/$collection': typeof SearchCollectionRoute
   '/$/': typeof SplatIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/product/$productId' | '/$'
+  fullPaths: '/' | '/product/$productId' | '/search/$collection' | '/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/product/$productId' | '/$'
-  id: '__root__' | '/' | '/product/$productId' | '/$/'
+  to: '/' | '/product/$productId' | '/search/$collection' | '/$'
+  id: '__root__' | '/' | '/product/$productId' | '/search/$collection' | '/$/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProductProductIdRoute: typeof ProductProductIdRoute
+  SearchCollectionRoute: typeof SearchCollectionRoute
   SplatIndexRoute: typeof SplatIndexRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search/$collection': {
+      id: '/search/$collection'
+      path: '/search/$collection'
+      fullPath: '/search/$collection'
+      preLoaderRoute: typeof SearchCollectionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/product/$productId': {
       id: '/product/$productId'
       path: '/product/$productId'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProductProductIdRoute: ProductProductIdRoute,
+  SearchCollectionRoute: SearchCollectionRoute,
   SplatIndexRoute: SplatIndexRoute,
 }
 export const routeTree = rootRouteImport
