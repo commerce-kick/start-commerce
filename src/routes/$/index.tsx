@@ -1,22 +1,29 @@
 import Prose from "@/components/prose";
 import { pageQueries } from "@/integrations/tanstack-query/queries/page";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$/")({
 	component: RouteComponent,
-	loader({ context, location, params }) {
+	loader: async ({ context, params }) => {
 		const { _splat } = params;
+
+		if (!_splat) {
+			throw notFound();
+		}
 
 		const { queryClient } = context;
 
-		queryClient.ensureQueryData(pageQueries.getPage(_splat));
+		const data = await queryClient.ensureQueryData(pageQueries.getPage(_splat));
+
+		if (!data) {
+			throw notFound();
+		}
 	},
 });
 
 function RouteComponent() {
 	const { data: page } = useSuspenseQuery(pageQueries.getPage("contact"));
-
 
 	return (
 		<div className="container mx-auto">

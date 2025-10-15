@@ -326,11 +326,13 @@ export const getCollection = createServerFn()
 
 		return reshapeCollection(res.body.data.collection);
 	});
-
+export type GetCollectionProductsProps = {
+	collection: string;
+	reverse?: boolean;
+	sortKey?: string;
+};
 export const getCollectionProducts = createServerFn()
-	.inputValidator(
-		(data: { collection: string; reverse?: boolean; sortKey?: string }) => data,
-	)
+	.inputValidator((data: GetCollectionProductsProps) => data)
 	.handler(async ({ data: { collection, reverse, sortKey } }) => {
 		const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
 			query: getCollectionProductsQuery,

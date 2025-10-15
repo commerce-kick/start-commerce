@@ -1,12 +1,13 @@
 import Image from "@/components/image";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Sheet,
-    SheetContent,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+	Sheet,
+	SheetContent,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
 } from "@/components/ui/sheet";
 import { cartQueries } from "@/integrations/tanstack-query/queries/cart";
 import { DEFAULT_OPTION } from "@/lib/constants";
@@ -19,11 +20,21 @@ export default function CartModal() {
 
 	return (
 		<Sheet>
-			<SheetTrigger asChild>
-				<Button variant="outline" size="icon">
-					<ShoppingBasket />
-				</Button>
-			</SheetTrigger>
+			<div className="relative">
+				<SheetTrigger asChild>
+					<Button variant="outline" size="icon">
+						<ShoppingBasket />
+					</Button>
+				</SheetTrigger>
+				{Boolean(cart?.totalQuantity) && (
+					<Badge
+						variant="destructive"
+						className="absolute -right-2 h-5 min-w-5 px-1.5 py-0 justify-center items-center -top-2 rounded-full text-xs"
+					>
+						{cart?.totalQuantity}
+					</Badge>
+				)}
+			</div>
 			<SheetContent>
 				<SheetHeader>
 					<SheetTitle>My Cart</SheetTitle>
@@ -31,7 +42,10 @@ export default function CartModal() {
 				<div className="gap-4 p-4">
 					{cart?.lines.map((slot) => {
 						return (
-							<div key={slot.id} className="flex flex-row gap-3 border-b border-border pb-2">
+							<div
+								key={slot.id}
+								className="flex flex-row gap-3 border-b border-border pb-2"
+							>
 								<Image
 									source={slot.merchandise.product.featuredImage}
 									className="size-16 border border-border rounded-md"

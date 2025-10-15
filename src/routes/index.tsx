@@ -30,7 +30,7 @@ function App() {
 					<Card key={slot.id} className="pt-0 overflow-hidden">
 						<img
 							src={slot.featuredImage.url}
-							className="w-full"
+							className="w-full aspect-square bg-secondary"
 							alt={slot.featuredImage.altText}
 						/>
 						<CardHeader>{slot.title}</CardHeader>

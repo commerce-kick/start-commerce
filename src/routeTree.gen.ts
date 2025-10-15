@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchLayoutRouteImport } from './routes/_search-layout'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatIndexRouteImport } from './routes/$/index'
-import { Route as SearchCollectionRouteImport } from './routes/search/$collection'
 import { Route as ProductProductIdRouteImport } from './routes/product/$productId'
+import { Route as SearchLayoutSearchIndexRouteImport } from './routes/_search-layout/search/index'
+import { Route as SearchLayoutSearchCollectionRouteImport } from './routes/_search-layout/search/$collection'
 
+const SearchLayoutRoute = SearchLayoutRouteImport.update({
+  id: '/_search-layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -24,53 +30,82 @@ const SplatIndexRoute = SplatIndexRouteImport.update({
   path: '/$/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SearchCollectionRoute = SearchCollectionRouteImport.update({
-  id: '/search/$collection',
-  path: '/search/$collection',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProductProductIdRoute = ProductProductIdRouteImport.update({
   id: '/product/$productId',
   path: '/product/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchLayoutSearchIndexRoute = SearchLayoutSearchIndexRouteImport.update({
+  id: '/search/',
+  path: '/search/',
+  getParentRoute: () => SearchLayoutRoute,
+} as any)
+const SearchLayoutSearchCollectionRoute =
+  SearchLayoutSearchCollectionRouteImport.update({
+    id: '/search/$collection',
+    path: '/search/$collection',
+    getParentRoute: () => SearchLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/product/$productId': typeof ProductProductIdRoute
-  '/search/$collection': typeof SearchCollectionRoute
   '/$': typeof SplatIndexRoute
+  '/search/$collection': typeof SearchLayoutSearchCollectionRoute
+  '/search': typeof SearchLayoutSearchIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/product/$productId': typeof ProductProductIdRoute
-  '/search/$collection': typeof SearchCollectionRoute
   '/$': typeof SplatIndexRoute
+  '/search/$collection': typeof SearchLayoutSearchCollectionRoute
+  '/search': typeof SearchLayoutSearchIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_search-layout': typeof SearchLayoutRouteWithChildren
   '/product/$productId': typeof ProductProductIdRoute
-  '/search/$collection': typeof SearchCollectionRoute
   '/$/': typeof SplatIndexRoute
+  '/_search-layout/search/$collection': typeof SearchLayoutSearchCollectionRoute
+  '/_search-layout/search/': typeof SearchLayoutSearchIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/product/$productId' | '/search/$collection' | '/$'
+  fullPaths:
+    | '/'
+    | '/product/$productId'
+    | '/$'
+    | '/search/$collection'
+    | '/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/product/$productId' | '/search/$collection' | '/$'
-  id: '__root__' | '/' | '/product/$productId' | '/search/$collection' | '/$/'
+  to: '/' | '/product/$productId' | '/$' | '/search/$collection' | '/search'
+  id:
+    | '__root__'
+    | '/'
+    | '/_search-layout'
+    | '/product/$productId'
+    | '/$/'
+    | '/_search-layout/search/$collection'
+    | '/_search-layout/search/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SearchLayoutRoute: typeof SearchLayoutRouteWithChildren
   ProductProductIdRoute: typeof ProductProductIdRoute
-  SearchCollectionRoute: typeof SearchCollectionRoute
   SplatIndexRoute: typeof SplatIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_search-layout': {
+      id: '/_search-layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof SearchLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -85,13 +120,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/search/$collection': {
-      id: '/search/$collection'
-      path: '/search/$collection'
-      fullPath: '/search/$collection'
-      preLoaderRoute: typeof SearchCollectionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/product/$productId': {
       id: '/product/$productId'
       path: '/product/$productId'
@@ -99,13 +127,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_search-layout/search/': {
+      id: '/_search-layout/search/'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchLayoutSearchIndexRouteImport
+      parentRoute: typeof SearchLayoutRoute
+    }
+    '/_search-layout/search/$collection': {
+      id: '/_search-layout/search/$collection'
+      path: '/search/$collection'
+      fullPath: '/search/$collection'
+      preLoaderRoute: typeof SearchLayoutSearchCollectionRouteImport
+      parentRoute: typeof SearchLayoutRoute
+    }
   }
 }
 
+interface SearchLayoutRouteChildren {
+  SearchLayoutSearchCollectionRoute: typeof SearchLayoutSearchCollectionRoute
+  SearchLayoutSearchIndexRoute: typeof SearchLayoutSearchIndexRoute
+}
+
+const SearchLayoutRouteChildren: SearchLayoutRouteChildren = {
+  SearchLayoutSearchCollectionRoute: SearchLayoutSearchCollectionRoute,
+  SearchLayoutSearchIndexRoute: SearchLayoutSearchIndexRoute,
+}
+
+const SearchLayoutRouteWithChildren = SearchLayoutRoute._addFileChildren(
+  SearchLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SearchLayoutRoute: SearchLayoutRouteWithChildren,
   ProductProductIdRoute: ProductProductIdRoute,
-  SearchCollectionRoute: SearchCollectionRoute,
   SplatIndexRoute: SplatIndexRoute,
 }
 export const routeTree = rootRouteImport
