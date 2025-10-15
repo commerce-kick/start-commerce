@@ -1,5 +1,6 @@
-import imageFragment from './image';
-import seoFragment from './seo';
+import imageFragment from "./image";
+import seoFragment from "./seo";
+import videoFragment from "./video";
 
 const productFragment = /* GraphQL */ `
   fragment product on Product {
@@ -51,6 +52,16 @@ const productFragment = /* GraphQL */ `
         }
       }
     }
+    videos: media(first: 20) {
+      edges {
+        node {
+          mediaContentType
+          ... on Video {
+            ...video
+          }
+        }
+      }
+    }
     seo {
       ...seo
     }
@@ -59,6 +70,7 @@ const productFragment = /* GraphQL */ `
   }
   ${imageFragment}
   ${seoFragment}
+  ${videoFragment}
 `;
 
 export default productFragment;

@@ -1,14 +1,37 @@
+import { Input } from "@/components/ui/input";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
+import { FormEvent, useState } from "react";
 
 export default function Search() {
+	const { q } = useSearch({ strict: false }) as { q: string };
+
+	const navigate = useNavigate({ from: "/search" });
+
+	const [value, setValue] = useState(q);
+
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		navigate({
+			search: {
+				q: value,
+			},
+		});
+	};
+
 	return (
-		<form className="w-max-[550px] relative w-full lg:w-80 xl:w-full">
-			<input
+		<form
+			className="w-max-[550px] relative w-full lg:w-80 xl:w-full"
+			onSubmit={handleSubmit}
+		>
+			<Input
 				type="text"
 				name="q"
 				placeholder="Search for products..."
 				autoComplete="off"
-				className="text-md w-full rounded-lg border bg-white px-4 py-2 text-black placeholder:text-neutral-500 md:text-sm dark:border-neutral-800 dark:bg-transparent dark:text-white dark:placeholder:text-neutral-400"
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
 			/>
 			<div className="absolute right-0 top-0 mr-3 flex h-full items-center">
 				<SearchIcon className="h-4" />

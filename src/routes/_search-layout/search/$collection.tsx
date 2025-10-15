@@ -1,12 +1,10 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import ProductCard from "@/components/product-card";
 import { collectionsQueries } from "@/integrations/tanstack-query/queries/collections";
 import { defaultSort, sorting } from "@/lib/constants";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-	createFileRoute,
-	useLoaderData
-} from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { z } from "zod";
+
 export const Route = createFileRoute("/_search-layout/search/$collection")({
 	component: RouteComponent,
 	validateSearch: z.object({
@@ -20,7 +18,7 @@ export const Route = createFileRoute("/_search-layout/search/$collection")({
 			sorting.find((item) => item.slug === deps.sort) || defaultSort;
 
 		const { queryClient } = context;
-		
+
 		await queryClient.ensureQueryData(
 			collectionsQueries.getCollectionProducts({
 				collection: collection,
@@ -28,7 +26,7 @@ export const Route = createFileRoute("/_search-layout/search/$collection")({
 			}),
 		);
 
-		queryClient.ensureQueryData(collectionsQueries.getCollections());
+		await queryClient.ensureQueryData(collectionsQueries.getCollections());
 
 		return {
 			sortKey,
@@ -52,13 +50,7 @@ function RouteComponent() {
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 			{products.map((slot) => {
-				return (
-					<Card key={slot.id}>
-						<CardHeader>
-							<CardTitle>{slot.title}</CardTitle>
-						</CardHeader>
-					</Card>
-				);
+				return <ProductCard key={slot.id} product={slot} />;
 			})}
 		</div>
 	);

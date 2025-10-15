@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import ProductCard from "@/components/product-card";
 import { collectionsQueries } from "@/integrations/tanstack-query/queries/collections";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
 	component: App,
@@ -26,28 +25,7 @@ function App() {
 	return (
 		<section className="grid lg:grid-cols-4 mx-auto container py-24">
 			{data.map((slot) => {
-				return (
-					<Card key={slot.id} className="pt-0 overflow-hidden">
-						<img
-							src={slot.featuredImage.url}
-							className="w-full aspect-square bg-secondary"
-							alt={slot.featuredImage.altText}
-						/>
-						<CardHeader>{slot.title}</CardHeader>
-						<CardContent>
-							<Button asChild>
-								<Link
-									to="/product/$productId"
-									params={{
-										productId: slot.handle,
-									}}
-								>
-									view product
-								</Link>
-							</Button>
-						</CardContent>
-					</Card>
-				);
+				return <ProductCard key={slot.id} product={slot} />;
 			})}
 		</section>
 	);

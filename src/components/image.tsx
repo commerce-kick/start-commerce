@@ -11,10 +11,9 @@ export default function Image({
 	className?: string;
 }) {
 	return (
-		<div className={cn("relative overflow-hidden", className)}>
+		<div className={cn("relative overflow-hidden bg-background", className)}>
 			<UnImage
 				layout="constrained"
-				className="absolute inset-0"
 				width={width}
 				height={height}
 				alt={altText}

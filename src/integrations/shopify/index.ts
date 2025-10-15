@@ -47,6 +47,7 @@ import type {
 	ShopifyProductsOperation,
 	ShopifyRemoveFromCartOperation,
 	ShopifyUpdateCartOperation,
+	Video,
 } from "./types";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
@@ -168,6 +169,20 @@ const reshapeImages = (images: Connection<Image>, productTitle: string) => {
 	});
 };
 
+const reshapeVideos = (videos: Connection<Video>, productTitle: string) => {
+	const flattened = removeEdgesAndNodes(videos);
+
+	return flattened
+		.filter((item) => item.mediaContentType === "VIDEO")
+		.map((video) => {
+			return {
+				id: video.id,
+				alt: video.alt || productTitle,
+				sources: video.sources,
+			};
+		});
+};
+
 const reshapeProduct = (
 	product: ShopifyProduct,
 	filterHiddenProducts: boolean = true,
@@ -179,11 +194,12 @@ const reshapeProduct = (
 		return undefined;
 	}
 
-	const { images, variants, ...rest } = product;
+	const { images, variants, videos, ...rest } = product;
 
 	return {
 		...rest,
 		images: reshapeImages(images, product.title),
+		videos: reshapeVideos(videos, product.title),
 		variants: removeEdgesAndNodes(variants),
 	};
 };
@@ -432,6 +448,10 @@ export const getProduct = createServerFn()
 			},
 		});
 
+		if (!res.body.data.product) {
+			return null;
+		}
+
 		return reshapeProduct(res.body.data.product, false);
 	});
 
@@ -448,9 +468,11 @@ export const getProductRecommendations = createServerFn()
 		return reshapeProducts(res.body.data.productRecommendations);
 	});
 
+export type GetProductsProps = { query?: string; reverse?: boolean; sortKey?: string }
+
 export const getProducts = createServerFn()
 	.inputValidator(
-		(data: { query?: string; reverse?: boolean; sortKey?: string }) => data,
+		(data: GetProductsProps) => data,
 	)
 	.handler(async ({ data: { query, reverse, sortKey } }) => {
 		const res = await shopifyFetch<ShopifyProductsOperation>({

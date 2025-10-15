@@ -44,21 +44,24 @@ export default function CartModal() {
 						return (
 							<div
 								key={slot.id}
-								className="flex flex-row gap-3 border-b border-border pb-2"
+								className="flex flex-row gap-3 border-b border-border pb-2 items-start pt-2"
 							>
 								<Image
 									source={slot.merchandise.product.featuredImage}
-									className="size-16 border border-border rounded-md"
+									className="w-16 border border-border rounded-md"
 								/>
-								<div className="flex-1">
-									<span className="leading-tight text-base font-semibold">
-										{slot.merchandise.product.title}
-									</span>
-									{slot.merchandise.title !== DEFAULT_OPTION && (
-										<p className="text-sm text-neutral-500 dark:text-neutral-400">
-											{slot.merchandise.title}
-										</p>
-									)}
+								<div className="flex-1 space-y-1">
+									<div>
+										<span className="leading-tight text-base font-semibold">
+											{slot.merchandise.product.title}
+										</span>
+
+										{slot.merchandise.title !== DEFAULT_OPTION && (
+											<p className="text-xs text-neutral-500 dark:text-neutral-400">
+												{slot.merchandise.title}
+											</p>
+										)}
+									</div>
 
 									<p className="font-semibold text-sm">
 										{formatCurrency(slot.cost.totalAmount)}

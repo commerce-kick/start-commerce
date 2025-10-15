@@ -1,13 +1,22 @@
 import { collectionsQueries } from "@/integrations/tanstack-query/queries/collections";
 import { sorting } from "@/lib/constants";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	Link,
+	Outlet,
+	useParams
+} from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_search-layout")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const { collection } = useParams({ strict: false }) as {
+		collection?: string;
+	};
+
 	const { data: collections } = useSuspenseQuery(
 		collectionsQueries.getCollections(),
 	);
@@ -48,10 +57,11 @@ function RouteComponent() {
 								className="mt-2 flex text-black dark:text-white"
 							>
 								<Link
-									from="/search/$collection"
-									search={{
+									from={collection ? "/search/$collection" : "/search"}
+									search={(prev) => ({
+										...prev,
 										...(slot.slug && { sort: slot.slug }),
-									}}
+									})}
 									className="w-full text-sm hover:underline dark:hover:text-neutral-100 underline-offset-4 capitalize"
 								>
 									{slot.title}
