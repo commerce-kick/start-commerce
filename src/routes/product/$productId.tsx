@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VariantSelector } from "@/components/variant-selector";
-import { VideoPlayer } from "@/components/video-player";
 import { useAddToCartMutation } from "@/integrations/tanstack-query/queries/cart";
 import { productsQueries } from "@/integrations/tanstack-query/queries/product";
 import { formatCurrency } from "@/lib/utils";
@@ -72,18 +71,20 @@ function RouteComponent() {
 		return notFound;
 	}
 
-	const video = data.videos.at(0);
+	/* const video = data.videos.at(0); */
 
 	return (
 		<div className="container mx-auto">
 			<Card className="w-full">
 				<div className="grid md:grid-cols-2">
 					<div className="pl-6">
-						{video ? (
+						{/* {video ? (
 							<VideoPlayer sources={video.sources} alt={video.alt} />
 						) : (
 							<Image source={data?.featuredImage} className="w-full" />
-						)}
+						)} */}
+
+						<Image source={data?.featuredImage} className="w-full" />
 					</div>
 					<div className="space-y-4">
 						<CardHeader>
