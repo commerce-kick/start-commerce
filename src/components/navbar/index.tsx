@@ -29,7 +29,7 @@ export default function NavBar() {
 									<Link
 										to="/$"
 										params={{ _splat: item.path }}
-										className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
+										className="text-neutral-500 capitalize underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
 									>
 										{item.title}
 									</Link>
