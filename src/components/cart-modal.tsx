@@ -90,7 +90,9 @@ export default function CartModal() {
 							{formatCurrency(cart?.cost.totalAmount)}
 						</p>
 					</div>
-					<Button type="submit">Checkout</Button>
+					<Button asChild>
+						<a href={cart?.checkoutUrl}>Checkout</a>
+					</Button>
 				</SheetFooter>
 			</SheetContent>
 		</Sheet>
